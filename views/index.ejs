@@ -1,0 +1,77 @@
+<!-- views/index.ejs -->
+<!-- 'mongodb+srv://poojapal88286:wft2Djf0CGRHUF4O@cluster0.ilyug11.mongodb.net/' -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            margin: 5px 0;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <h1>To-Do List</h1>
+    <form action="/addTask" method="post">
+        <label for="task">New Task:</label>
+        <input type="text" id="task" name="task" required>
+        <label for="dueDate">Due Date:</label>
+        <input type="datetime-local" id="dueDate" name="dueDate">
+        <button type="submit">Add Task</button>
+    </form>
+    
+    <ul>
+        <% tasks.forEach(task => { %>
+            <li class="<%= task.completed ? 'completed' : '' %>">
+                <input type="checkbox" <% if (task.completed) { %>checked<% } %> onclick="return false;">
+                <%= task.description %>
+                <% if (task.dueDate) { %>
+                    <span style="display:inline;">(Due: <%= task.dueDate.toLocaleString() %>)</span>
+                <% } %>
+                <% if (!task.completed) { %>
+                    <form action="/completeTask/<%= task._id %>" method="post" style="display: inline;">
+                        <button type="submit">Complete</button>
+                    </form>
+                <% } %>
+                <form action="/deleteTask/<%= task._id %>" method="post" style="display: inline;">
+                    <button type="submit">Delete</button>
+                </form>
+            </li>
+        <% }); %>
+    </ul>
+</body>
+</html>
